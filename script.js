@@ -1,17 +1,32 @@
-const sqlite3 = require('sqlite3').verbose();
-const db = new sqlite3.Database(':memory:');
+// script.js
 
-db.serialize(function() {
-  db.run("CREATE TABLE example (id INTEGER PRIMARY KEY, name TEXT, age INTEGER)");
+document.addEventListener('DOMContentLoaded', () => {
+  const loginForm = document.getElementById('loginForm');
 
-  const stmt = db.prepare("INSERT INTO example (name, age) VALUES (?, ?)");
-  stmt.run("John Doe", 25);
-  stmt.run("Jane Smith", 30);
-  stmt.finalize();
+  loginForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
 
-  db.each("SELECT * FROM example", function(err, row) {
-    console.log(row.id + ": " + row.name + ", " + row.age + " years old");
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+
+    try {
+      const response = await fetch('http://localhost:4000/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `username=${username}&password=${password}`,
+      });
+
+      if (response.ok) {
+        const result = await response.text();
+        alert(result); // แสดงข้อความล็อกอินสำเร็จ
+      } else {
+        throw new Error('Invalid username or password');
+      }
+    } catch (error) {
+      console.error(error);
+      alert('Error during login. Please try again.'); // แสดงข้อความเมื่อเกิดข้อผิดพลาด
+    }
   });
 });
-
-db.close();
