@@ -3,20 +3,48 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fetch Data from Node.js Server</title>
+  <title>Login</title>
 </head>
 <body>
+  <h2>Login</h2>
+  <form id="loginForm">
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" required><br>
+    
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required><br>
 
-<script>
-  // เรียกใช้ API จากเซิร์ฟเวอร์ Node.js
-  fetch('http://localhost:3001')
-    .then(response => response.json())  // หาก API ส่งค่า JSON กลับมา
-    .then(data => {
-      // ประมวลผลข้อมูลที่ได้จาก API ได้ที่นี่
-      console.log(data);
-    })
-    .catch(error => console.error('Error fetching data:', error));
-</script>
+    <button type="button" onclick="login()">Login</button>
+  </form>
 
+  <script>
+    function login() {
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      // ส่งข้อมูลไปยังเซิร์ฟเวอร์
+      fetch('http://localhost:4000/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`,
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Invalid username or password');
+        }
+        return response.text();
+      })
+      .then(data => {
+        // ล็อกอินสำเร็จ
+        alert(data);
+      })
+      .catch(error => {
+        // ล็อกอินไม่สำเร็จ
+        alert(error.message);
+      });
+    }
+  </script>
 </body>
 </html>
