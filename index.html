@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fetch Data from Node.js Server</title>
+</head>
+<body>
+
+<script>
+  // เรียกใช้ API จากเซิร์ฟเวอร์ Node.js
+  fetch('http://localhost:3001')
+    .then(response => response.json())  // หาก API ส่งค่า JSON กลับมา
+    .then(data => {
+      // ประมวลผลข้อมูลที่ได้จาก API ได้ที่นี่
+      console.log(data);
+    })
+    .catch(error => console.error('Error fetching data:', error));
+</script>
+
+</body>
+</html>
